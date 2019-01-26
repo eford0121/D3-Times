@@ -34,11 +34,11 @@ d3.csv("assets/data/data.csv")
     // Step 2: Create scale functions
     // ==============================
     var xLinearScale = d3.scaleLinear()
-        .domain([20, d3.max(stateData, d => d.poverty)])
+        .domain([8, d3.max(stateData, d => d.poverty)])
         .range([0, width]);
 
     var yLinearScale = d3.scaleLinear()
-        .domain([0, d3.max(stateData, d => d.smokes)])
+        .domain([4, d3.max(stateData, d => d.smokes)])
         .range([height, 0]);
     
     // Step 3: Create axis functions
@@ -62,7 +62,7 @@ d3.csv("assets/data/data.csv")
     .attr("cx", d => xLinearScale(d.poverty))
     .attr("cy", d => yLinearScale(d.smokes))
     .attr("r", "15")
-    .attr("fill", "pink")
+    .attr("fill", "purple")
     .attr("opacity", ".5");
   });
 
