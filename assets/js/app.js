@@ -12,7 +12,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart, and shift the latter by left and top margins.
-var svg = d3.select(".chart")
+var svg = d3.select("#scatter")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -20,14 +20,15 @@ var svg = d3.select(".chart")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-d3.csv("data/data.csv")
-  .then(function(stateData) {
+d3.csv("assets/data/data.csv")
+.then(function (stateData) {
 
     // Step 1: Parse Data/Cast as numbers
     // ==============================
     stateData.forEach(function(data) {
       data.poverty = +data.poverty;
       data.smokes = +data.smokes;
+      data.state = data.state;
     });
 
     // Step 2: Create scale functions
