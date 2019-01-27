@@ -17,8 +17,11 @@ var svg = d3.select("#scatter")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
+
+
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
 
 d3.csv("assets/data/data.csv")
 .then(function (stateData) {
@@ -29,6 +32,7 @@ d3.csv("assets/data/data.csv")
       data.poverty = +data.poverty;
       data.smokes = +data.smokes;
       data.state = data.state;
+      data.abbr = data.abbr;
     });
 
     // Step 2: Create scale functions
@@ -56,15 +60,64 @@ d3.csv("assets/data/data.csv")
     // Step 5: Create Circles
     // ==============================
     var circlesGroup = chartGroup.selectAll("circle")
-    .data(stateData)
-    .enter()
-    .append("circle")
-    .attr("cx", d => xLinearScale(d.poverty))
-    .attr("cy", d => yLinearScale(d.smokes))
-    .attr("r", "15")
-    .attr("fill", "purple")
-    .attr("opacity", ".5");
-  });
+      .data(stateData)
+      .enter()
+      .append("circle")
+      .attr("cx", d => xLinearScale(d.poverty))
+      .attr("cy", d => yLinearScale(d.smokes))
+      .attr("r", "15")
+      .attr("fill", "purple")
+      .attr("opacity", ".5");
+
+      var textGroup = chartGroup.selectAll(".label")
+      .data(stateData)
+      .enter()
+      .append("text")
+      .attr("class", "label")
+      .attr("text-anchor", "middle")
+      .text(function(d) {return d.abbr;})
+      .attr("x", d => xLinearScale(d.poverty))
+      .attr("y", d => yLinearScale(d.smokes)+6)
+      .attr("fill", "white")
+      .attr("font-family","sans-serif");
+  
+
+    // Step 6: Initialize tool tip
+    // ==============================
+      var toolTip = d3.tip()
+        .attr("class", "tooltip")
+        .offset([80, -60])
+        .text(function(d) {
+          return (`${d.state}<br>Poverty Level: ${d.poverty}<br> Smokers: ${d.smokes} %`);
+      });
+    
+    chartGroup.call(toolTip);
+
+    circlesGroup.on("click", function(data, i) {
+      toolTip.show(data, this);
+    })
+
+    .on("mouseout", function(data, i) {
+      toolTip.hide(data);
+    });
+
+    // Create axes labels
+    chartGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left + 40)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("class", "axisText")
+      .text("% are Smokers");
+
+    chartGroup.append("text")
+      .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+      .attr("class", "axisText")
+      .text("Poverty Level") ;
+
+});
+
+
 
 
 
