@@ -85,15 +85,19 @@ d3.csv("assets/data/data.csv")
     // Step 6: Initialize tool tip
     // ==============================
       var toolTip = d3.tip()
-        .attr("class", "tooltip")
+        .attr("class", "d3-tip")
         .offset([80, -60])
-        .text(function(d) {
-          return (`${d.state}<br>Poverty Level: ${d.poverty}<br> Smokers: ${d.smokes} %`);
+        .html(function(d) {
+          return (`${d.state}<br>Poverty Level: ${d.poverty}% <br> Smokers: ${d.smokes} %`);
       });
     
     chartGroup.call(toolTip);
 
     circlesGroup.on("click", function(data, i) {
+      toolTip.show(data, this);
+    })
+
+    textGroup.on("click", function(data, i) {
       toolTip.show(data, this);
     })
 
